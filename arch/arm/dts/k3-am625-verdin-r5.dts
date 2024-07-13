@@ -73,3 +73,7 @@
 	/* We require this for boot handshake */
 	status = "okay";
 };
+
+&k3_clks {
+	status = "disabled";
+};
