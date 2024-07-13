@@ -39,6 +39,7 @@
 #define CFG_EXTRA_ENV_SETTINGS \
 	BOOTENV \
 	MEM_LAYOUT_ENV_SETTINGS \
+	DFU_ALT_INFO_RAM \
 	"boot_script_dhcp=boot.scr\0" \
 	"console=ttyS2\0" \
 	"fdt_board=dev\0" \
@@ -57,5 +58,7 @@
 		"setexpr blkcnt ${filesize} + 0x1ff && setexpr blkcnt " \
 		"${blkcnt} / 0x200; mmc dev 0 1; mmc write ${loadaddr} 0x1400 " \
 		"${blkcnt}; fi\0"
+
+#include <env/ti/k3_dfu.h>
 
 #endif /* __VERDIN_AM62_H */
