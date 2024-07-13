@@ -37,6 +37,8 @@
 #endif
 
 reset:
+debug:
+	b	debug
 	/* Allow the board to save important registers */
 	b	save_boot_params
 save_boot_params_ret:
