@@ -53,10 +53,6 @@ _bss_end_ofs:
 	.quad	__bss_end - _start
 
 reset:
-#if !defined(CONFIG_SPL_BUILD)
-debug:
-	b	debug
-#endif
 	/* Allow the board to save important registers */
 	b	save_boot_params
 .globl	save_boot_params_ret
