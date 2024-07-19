@@ -15,6 +15,8 @@
 #include <init.h>
 #include <k3-ddrss.h>
 #include <spl.h>
+#include <dm/device.h>
+#include <power-domain.h>
 
 #include "../common/tdx-cfg-block.h"
 
@@ -23,8 +25,35 @@ DECLARE_GLOBAL_DATA_PTR;
 int board_init(void)
 {
 	u32 val;
+	int ret;
+	ofnode usbss_node;
+	struct udevice *usbss_dev;
+	struct power_domain *pd;
 
 #define CRASH_ADDRESS 0x31100000
+	puts("Get USB device\n");
+	usbss_node = ofnode_path("/bus@f0000/dwc3-usb@f910000");
+	if (!ofnode_valid(usbss_node)) {
+		printf("Failed to get usb node\n");
+		return 0;
+	}
+	ret = device_find_global_by_ofnode(usbss_node, &usbss_dev);
+	if (ret) {
+		printf("Failed to get usb device: %d\n", ret);
+		return 0;
+	}
+	puts("Get power domain controller and turn it on\n");
+	ret = power_domain_get_by_index(usbss_dev, pd, 0);
+	if (ret) {
+		printf("Failed to get usb power domain: %d\n", ret);
+		return 0;
+	}
+	ret = power_domain_on(pd);
+	if (ret) {
+		printf("Failed to power on usb power domain: %d\n", ret);
+		return 0;
+	}
+
 	val = readl(CRASH_ADDRESS);
 	printf("Value at 0x%08x: 0x%08x\n", CRASH_ADDRESS, val);
 
