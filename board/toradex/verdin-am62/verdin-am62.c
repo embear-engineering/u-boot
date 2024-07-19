@@ -22,6 +22,12 @@ DECLARE_GLOBAL_DATA_PTR;
 
 int board_init(void)
 {
+	u32 val;
+
+#define CRASH_ADDRESS 0x31100000
+	val = readl(CRASH_ADDRESS);
+	printf("Value at 0x%08x: 0x%08x\n", CRASH_ADDRESS, val);
+
 	return 0;
 }
 
