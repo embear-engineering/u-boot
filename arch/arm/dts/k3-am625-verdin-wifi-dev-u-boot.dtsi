@@ -186,7 +186,3 @@
 	dr_mode = "peripheral";
 	bootph-all;
 };
-
-&cpsw3g_phy0 {
-	reg = <5>;
-};
