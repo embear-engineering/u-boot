@@ -19,6 +19,41 @@
 		stdout-path = &lpuart1;
 	};
 
+	panel_lvds: panel-lvds {
+		compatible = "simple-panel";
+
+		status = "okay";
+
+		data-mapping = "spwg";
+		height-mm = <476>;
+		width-mm = <268>;
+
+		port@0 {
+			panel_lvds_in: endpoint {
+					remote-endpoint = <&lvds1_out>;
+			};
+		};
+
+		display-timings {
+			native-mode = <&timing0>;
+			timing0: timing0 {
+				clock-frequency = <142400000>;
+				hactive = <1920>;
+				vactive = <1080>;
+				hback-porch = <40>;
+				hfront-porch = <40>;
+				vback-porch = <40>;
+				vfront-porch = <40>;
+				hsync-len = <90>;
+				vsync-len = <50>;
+				hsync-active = <1>;
+				vsync-active = <1>;
+				de-active = <1>;
+				pixelclk-active = <1>; /* positive edge */
+			};
+		};
+	};
+
 	regulators {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -655,4 +690,54 @@
 	bus-width = <4>;
 	cd-gpios = <&gpio4 12 GPIO_ACTIVE_LOW>; /* Apalis SD1_CD# */
 	status = "okay";
+};
+
+&ldb2 {
+		fsl,dual-channel;
+		status = "okay";
+
+		lvds-channel@0 {
+			fsl,data-mapping = "spwg";
+			fsl,data-width = <24>;
+			status = "okay";
+
+			port@1 {
+				reg = <1>;
+				lvds1_out: endpoint {
+					remote-endpoint = <&panel_lvds_in>;
+				};
+			};
+		};
+
+		lvds-channel@1 {
+			fsl,data-mapping = "spwg";
+			fsl,data-width = <24>;
+			status = "okay";
+		};
+
+};
+
+&dpu2 {
+	status = "okay";
+};
+
+&ldb2_phy {
+	status = "okay";
+};
+
+&gpio0 {
+	backlight-force-pwm {
+		gpio-hog;
+		gpios = <0 GPIO_ACTIVE_HIGH>; /* Apalis BKL_PWM */
+		output-high;
+	};
+};
+
+&gpio1 {
+
+	backlight-on {
+		gpio-hog;
+		gpios = <4 GPIO_ACTIVE_HIGH>; /* Apalis BKL1_ON */
+		output-high;
+	};
 };
