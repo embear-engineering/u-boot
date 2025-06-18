@@ -205,10 +205,16 @@ static int imx8_dc_video_init(struct udevice *dev)
 	struct video_uc_plat *plat = dev_get_uclass_plat(dev);
 
 	int8_t imxdpuv1_id = priv->dpu_id;
+	bool id_valid = false;
 
-	debug("%s\n", __func__);
+	debug("%s %d\n", __func__, imxdpuv1_id);
 
-	if (imxdpuv1_id != 0 || (imxdpuv1_id == 1 && !is_imx8qm())) {
+	if (is_imx8qm() && imxdpuv1_id > 0 && imxdpuv1_id < 2) {
+		id_valid = true;
+	} else if (imxdpuv1_id == 0) {
+		id_valid = true;
+	}
+	if (id_valid != true) {
 		printf("%s(): invalid imxdpuv1_id %d", __func__, imxdpuv1_id);
 		return -ENODEV;
 	}
