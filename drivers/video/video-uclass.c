@@ -509,7 +509,7 @@ static int show_splash(struct udevice *dev)
 	u8 *data = SPLASH_START(u_boot_logo);
 	int ret;
 
-	ret = video_bmp_display(dev, map_to_sysmem(data), -4, 4, true);
+	ret = video_bmp_display(dev, map_to_sysmem(data), -4, 0, true);
 
 	return 0;
 }
