@@ -54,6 +54,30 @@
 		/* Verdin I2S_2_D_OUT as GPIO (SODIMM 46) */
 		gpios = <&main_gpio0 71 GPIO_ACTIVE_HIGH>;
 	};
+
+	gpio_keys: gpio-keys {
+		compatible = "gpio-keys";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_gpio_1>, <&pinctrl_gpio_2>,  <&pinctrl_gpio_3>;
+
+		button-up {
+			gpios = <&mcu_gpio0 1 GPIO_ACTIVE_LOW>;
+			label = "UP";
+			linux,code = <KEY_UP>;
+		};
+
+		button-down {
+			gpios = <&mcu_gpio0 2 GPIO_ACTIVE_LOW>;
+			label = "DOWN";
+			linux,code = <KEY_DOWN>;
+		};
+
+		button-ok {
+			gpios = <&mcu_gpio0 3 GPIO_ACTIVE_LOW>;
+			label = "ENTER";
+			linux,code = <KEY_ENTER>;
+		};
+	};
 };
 
 &main_gpio0 {
