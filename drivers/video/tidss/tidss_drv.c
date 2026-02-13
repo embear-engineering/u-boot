@@ -461,13 +461,13 @@ void dss_vp_enable(struct tidss_drv_priv *priv, u32 hw_videoport, struct display
 		     FLD_VAL(vsw - 1, 7, 0) |
 		     FLD_VAL(vfp, 19, 8) | FLD_VAL(vbp, 31, 20));
 
-	ivs = !!(timing->flags & (1 << 3));
+	ivs = timing->flags & DISPLAY_FLAGS_VSYNC_HIGH ? 0 : 1;
 
-	ihs = !!(timing->flags & (1 << 1));
+	ihs = timing->flags & DISPLAY_FLAGS_HSYNC_HIGH ? 0 : 1;
 
-	ieo = 0;
+	ieo = timing->flags & DISPLAY_FLAGS_DE_LOW ? 1 : 0;
 
-	ipc = 0;
+	ipc = timing->flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE ? 1 : 0;
 
 	/* always use the 'rf' setting */
 	onoff = true;
@@ -476,10 +476,6 @@ void dss_vp_enable(struct tidss_drv_priv *priv, u32 hw_videoport, struct display
 
 	/* always use aligned syncs */
 	align = true;
-
-	/* always use DE_HIGH for OLDI */
-	if (priv->feat->vp_bus_type[hw_videoport] == DSS_VP_OLDI)
-		ieo = false;
 
 	dss_vp_write(priv, hw_videoport, DSS_VP_POL_FREQ,
 		     FLD_VAL(align, 18, 18) |
