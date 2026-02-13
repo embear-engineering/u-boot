@@ -863,7 +863,7 @@ static int tidss_drv_probe(struct udevice *dev)
 	uc_priv->xsize = timings.hactive.typ;
 	uc_priv->ysize = timings.vactive.typ;
 	if (priv->feat->subrev == DSS_AM65X || priv->feat->subrev == DSS_AM625) {
-		priv->oldi_mode = OLDI_DUAL_LINK;
+		priv->oldi_mode = OLDI_SINGLE_LINK_SINGLE_MODE;
 		if (priv->oldi_mode) {
 			ret = dss_init_am65x_oldi_io_ctrl(dev, priv);
 			if (ret)
