@@ -19,4 +19,71 @@
 		     "toradex,verdin-am62p-wifi",
 		     "toradex,verdin-am62p",
 		     "ti,am62p5";
+
+	panel_lvds: panel-lvds {
+		bootph-pre-ram;
+		compatible = "simple-panel";
+		status= "okay";
+		width-mm = <217>;
+		height-mm = <136>;
+		data-mapping = "vesa-24";
+		backlight = <&backlight_lvds>;
+
+		panel-timing {
+			bootph-pre-ram;
+			clock-frequency = <71100>;
+			de-active = <1>;
+			hactive = <1280>;
+			hback-porch = <60>;
+			hfront-porch = <60>;
+			hsync-active = <0>;
+			hsync-len = <40>;
+			pixelclk-active = <1>; /* positive edge */
+			vactive = <800>;
+			vback-porch = <7>;
+			vfront-porch = <7>;
+			vsync-active = <0>;
+			vsync-len = <9>;
+		};
+	};
+
+	backlight_lvds: backlight-lvds {
+		compatible = "gpio-backlight";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_i2s_2_d_out_gpio>, <&pinctrl_epwm2_a>;
+		/* Verdin I2S_2_D_OUT as GPIO (SODIMM 46) */
+		gpios = <&main_gpio0 71 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&main_gpio0 {
+	backligh-enable {
+		gpio-hog;
+		gpios = <34 GPIO_ACTIVE_HIGH>;
+		line-name = "backlight-enable";
+		output-high;
+	};
+};
+
+&dss_oldi_io_ctrl {
+	bootph-all;
+	status = "okay";
+};
+
+&dss0 {
+	bootph-all;
+	compatible = "ti,am625-dss";
+	clocks = <&k3_clks 186 6>,
+		 <&k3_clks 186 0>,
+		 <&k3_clks 186 2>;
+	ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
+	status = "okay";
+};
+
+&main_pmx0 {
+	pinctrl_epwm2_a: main-epwm2a-default-pins {
+		pinctrl-single,pins = <
+			AM62PX_IOPAD(0x0124, PIN_OUTPUT, 7) /* (J25) MMC2_SDCD.GPIO0_71*/ /* SODIMM 16 */
+		>;
+	};
 };
